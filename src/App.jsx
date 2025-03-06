@@ -1,31 +1,35 @@
-import styled from 'styled-components';
-import ApplicationForm from './components/ApplicationForm';
 import { useState } from 'react';
-import Modal from './components/modal';
+import ApplicationForm from './components/ApplicationForm';
+import Modal from './components/Modal.jsx';
+import styled from 'styled-components';
 
-const DivContainer = styled.div`
-  margin: 5% 10%;
+const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
   align-items: center;
+  gap: 20px;
+  margin: 5% 10%;
+`;
+
+const H1 = styled.h1`
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1eab72;
+  text-align: center;
 `;
 
 const App = () => {
-  const [isFormSubmit, setIsFormSubmit] = useState(false);
-  const [data, setData] = useState({});
+  const [userData, setUserData] = useState(null);
 
   return (
-    <DivContainer>
-      {!isFormSubmit && (
-        <ApplicationForm
-          onSetData={setData}
-          onSetIsFormSubmit={setIsFormSubmit}
-        />
+    <Container>
+      <H1>Formularz zgłoszeniowy na kurs programowania</H1>
+      {userData === null ? (
+        <ApplicationForm setUserData={setUserData} />
+      ) : (
+        <Modal userData={userData} />
       )}
-
-      {isFormSubmit && <Modal userData={data} />}
-    </DivContainer>
+    </Container>
   );
 };
 
