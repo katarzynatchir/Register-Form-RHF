@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import formSchema from '../validation/schemaValidation';
 import {
@@ -14,8 +14,11 @@ const ApplicationForm = ({ setUserData }) => {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
+    control,
   } = useForm({
-    mode: 'onChange',
+    mode: 'all',
+    resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: '',
       lastName: '',
@@ -23,15 +26,27 @@ const ApplicationForm = ({ setUserData }) => {
       phone: '',
       formOfLearnig: '',
       technology: [],
+      imageCV: {},
+      isExperienced: false,
+      // programingLanguages: [{ name: 'JavaScript', years: '1' }],
     },
-    resolver: zodResolver(formSchema),
   });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'programingLanguages',
+  });
+
+  const onRowDelete = index => {
+    remove(index);
+  };
+  const isExperienced = watch('isExperienced');
 
   const onSubmit = data => {
     setUserData(data);
-
     console.log(data);
   };
+
   const onError = errors => console.log('validation errors', errors);
 
   return (
@@ -43,7 +58,6 @@ const ApplicationForm = ({ setUserData }) => {
           <ErrorMessage>{errors.firstName.message}</ErrorMessage>
         )}
       </div>
-
       <div>
         <Input {...register('lastName')} type="text" placeholder="Nazwisko" />
         {errors.lastName && (
@@ -62,7 +76,6 @@ const ApplicationForm = ({ setUserData }) => {
         />
         {errors.phone && <ErrorMessage>{errors.phone.message}</ErrorMessage>}
       </div>
-
       <H2>Preferencje kursu</H2>
       <div>
         <FlexRow>
@@ -90,8 +103,7 @@ const ApplicationForm = ({ setUserData }) => {
           <ErrorMessage>{errors.formOfLearnig.message}</ErrorMessage>
         )}
       </div>
-
-      <select {...register('technology')} size="5" multiple="multiple">
+      <select {...register('technology')} size={5} multiple="multiple">
         <option value="react">React</option>
         <option value="nodejs">Node.js</option>
         <option value="html">HTML</option>
@@ -105,11 +117,71 @@ const ApplicationForm = ({ setUserData }) => {
       <Input {...register('imageCV')} type="file" />
       {errors.imageCV && <ErrorMessage>{errors.imageCV.message}</ErrorMessage>}
       <H2>Doświadczenie w programowaniu</H2>
-      <label>
-        <input type="checkbox" {...register('sendToEMail')} />
-        <span>Czy masz doświadczenie w programowaniu?</span>
-      </label>
-
+      <div>
+        <label>
+          <input type="checkbox" {...register('isExperienced')} />
+          <span>Czy masz doświadczenie w programowaniu?</span>
+        </label>
+      </div>
+      {isExperienced && (
+        <>
+          <div>
+            <button
+              type="button"
+              onClick={() => {
+                append({
+                  name: 'JavaScript',
+                  years: '1',
+                });
+              }}
+            >
+              Dodaj doświadczenie
+            </button>
+            {errors.programingLanguages && (
+              <ErrorMessage>{errors.programingLanguages.message}</ErrorMessage>
+            )}
+          </div>
+          {fields.map((field, index) => (
+            <table key={field.id}>
+              <tbody>
+                <tr>
+                  <td>
+                    <select
+                      {...register(`programingLanguages.${index}.name`, {
+                        shouldUnregister: true,
+                      })}
+                    >
+                      <option value="JavaScript">JavaScript</option>
+                      <option value="Python">Python</option>
+                      <option value="C++">C++</option>
+                      <option value="Inne">Inne</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select
+                      {...register(`programingLanguages.${index}.years`, {
+                        shouldUnregister: true,
+                      })}
+                    >
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                    </select>
+                  </td>
+                  <td>
+                    <button type="button" onClick={() => onRowDelete(index)}>
+                      Usuń
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          ))}
+        </>
+      )}
+      <pre>{JSON.stringify(watch(), null, 2)}</pre>
       <button type="submit">Wyślij zgłoszenie</button>
     </ApplicationFormStyled>
   );

@@ -1,17 +1,31 @@
 import styled from 'styled-components';
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin: 5% 10%;
+`;
+
 const ApplicationFormStyled = styled('form')`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  max-width: 40rem;
+  width: 40rem;
   padding: 1rem;
   border: 0.125rem solid #383838;
   background-color: #222426;
 `;
+const H1 = styled.h1`
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1eab72;
+  text-align: center;
+`;
 
 const H2 = styled.h2`
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: #d8a559;
 `;
@@ -31,8 +45,7 @@ const Input = styled.input`
 `;
 
 const ErrorMessage = styled.p`
-  font-size: 0.75rem;
-  font-weight: 300;
+  font-size: 0.85rem;
   color: #ef5350;
 `;
 
@@ -41,4 +54,12 @@ const FlexRow = styled.div`
   gap: 1rem;
 `;
 
-export { ApplicationFormStyled, H2, Input, ErrorMessage, FlexRow };
+export {
+  Container,
+  ApplicationFormStyled,
+  H1,
+  H2,
+  Input,
+  ErrorMessage,
+  FlexRow,
+};
