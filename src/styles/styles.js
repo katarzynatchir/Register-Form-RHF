@@ -17,6 +17,7 @@ const ApplicationFormStyled = styled('form')`
   border: 0.125rem solid #383838;
   background-color: #222426;
 `;
+
 const H1 = styled.h1`
   font-size: 1.5rem;
   font-weight: 600;
@@ -25,6 +26,7 @@ const H1 = styled.h1`
 `;
 
 const H2 = styled.h2`
+  font-size: 1.25rem;
   font-size: 1.25rem;
   font-weight: 600;
   color: #d8a559;
@@ -56,6 +58,7 @@ const Select = styled.select`
 `;
 
 const ErrorMessage = styled.p`
+  font-size: 0.85rem;
   font-size: 0.85rem;
   color: #ef5350;
 `;
