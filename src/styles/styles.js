@@ -11,7 +11,7 @@ const Container = styled.div`
 const ApplicationFormStyled = styled('form')`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.8rem;
   width: 40rem;
   padding: 1rem;
   border: 0.125rem solid #383838;
@@ -44,6 +44,17 @@ const Input = styled.input`
   }
 `;
 
+const Select = styled.select`
+  width: 100%;
+  background-color: #374151;
+  color: #f2f2f2;
+  padding: 0.5rem;
+  overflow-y: hidden;
+  &:focus-visible {
+    outline: 1px solid #748eab;
+  }
+`;
+
 const ErrorMessage = styled.p`
   font-size: 0.85rem;
   color: #ef5350;
@@ -54,12 +65,33 @@ const FlexRow = styled.div`
   gap: 1rem;
 `;
 
+const AddButton = styled.button`
+  background-color: #0d9f6e;
+  width: 100%;
+  padding: 0.5rem;
+  text-align: center;
+  color: #000;
+  cursor: pointer;
+  border: none;
+`;
+
+// const DeleteButton = styled.button`
+//   background-color: #0d9f6e;
+//   width: 100%;
+//   padding: 0.5rem;
+//   text-align: center;
+//   color: #000;
+//   cursor: pointer;
+//   border: none;
+// `;
 export {
   Container,
   ApplicationFormStyled,
   H1,
   H2,
   Input,
+  Select,
   ErrorMessage,
   FlexRow,
+  AddButton,
 };
