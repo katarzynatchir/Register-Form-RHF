@@ -30,7 +30,7 @@ const ModalBox = styled.div`
   background-color: #222426;
 `;
 
-const ApplicationFormStyled = styled('form')`
+const ApplicationFormStyled = styled.form`
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
@@ -63,7 +63,9 @@ const ImgCV = styled.img`
   height: auto;
 `;
 
-const Input = styled.input`
+const Input = styled.input.attrs(({ className }) => ({
+  className: className || '',
+}))`
   width: 100%;
   background-color: #374151;
   border: none;
@@ -76,13 +78,14 @@ const Input = styled.input`
   &:focus-visible {
     outline: 1px solid #748eab;
   }
-`;
-const InputFile = styled(Input)`
-  background-color: transparent;
-  padding: 0;
+  &.fileInput {
+    background-color: transparent;
+    padding: 0;
+    cursor: pointer;
+  }
 `;
 
-const Select = styled.select`
+const SelectStyled = styled.select`
   width: 100%;
   background-color: #374151;
   color: #f2f2f2;
@@ -102,7 +105,7 @@ const LabelControl = styled.label`
   gap: 0.75rem;
 `;
 
-const Checkbox = styled.input`
+const CheckboxStyled = styled.input`
   appearance: none;
   background-color: #374151;
   width: 1.2rem;
@@ -126,7 +129,7 @@ const Checkbox = styled.input`
   }
 `;
 
-const Radio = styled(Checkbox)`
+const RadioStyled = styled(CheckboxStyled)`
   border-radius: 50%;
   &::before {
     border-radius: 50%;
@@ -152,7 +155,9 @@ const FlexItem = styled.div`
   flex-grow: 1;
 `;
 
-const Button = styled.button`
+const Button = styled.button.attrs(({ className }) => ({
+  className: className || '',
+}))`
   font-size: 1rem;
   text-align: center;
   color: #121416;
@@ -167,14 +172,12 @@ const Button = styled.button`
   &:hover {
     opacity: 0.9;
   }
-`;
-
-const AddButton = styled(Button)`
-  background-color: #0d9f6e;
-`;
-
-const DeleteButton = styled(Button)`
-  background-color: #da3f3e;
+  &.btn-add {
+    background-color: #0d9f6e;
+  }
+  &.btn-delete {
+    background-color: #da3f3e;
+  }
 `;
 
 export {
@@ -187,15 +190,12 @@ export {
   UL,
   ImgCV,
   Input,
-  InputFile,
-  Select,
+  SelectStyled,
   LabelControl,
-  Checkbox,
-  Radio,
+  CheckboxStyled,
+  RadioStyled,
   ErrorMessage,
   FlexRow,
   FlexItem,
   Button,
-  AddButton,
-  DeleteButton,
 };

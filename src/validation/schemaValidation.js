@@ -1,13 +1,11 @@
 import { z } from 'zod';
 
 const phoneValidation = new RegExp(/^[0-9]{9}$/);
-
-const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
+const acceptedImgTypes = ['image/jpeg', 'image/jpg', 'image/png'];
 
 const WithoutExperience = z.object({
   isExperienced: z.literal(false),
 });
-
 const WithExperience = z.object({
   isExperienced: z.literal(true),
   programingLanguages: z
@@ -37,7 +35,7 @@ const formSchema = z
     phone: z.string().regex(phoneValidation, {
       message: 'Numer telefonu musi składać się z 9 cyfr',
     }),
-    formOfLearnig: z.enum(['Stacjonarny', 'Online'], {
+    formOfLearning: z.enum(['Stacjonarna', 'Online'], {
       message: 'Należy wybrać preferowaną formę nauki',
     }),
     technology: z
@@ -48,7 +46,7 @@ const formSchema = z
       .any()
       .refine(file => file?.length == 1, 'Musisz dodać załącznik jako zdjęcie')
       .refine(file =>
-        ACCEPTED_IMAGE_TYPES.includes(file[0]?.type, {
+        acceptedImgTypes.includes(file[0]?.type, {
           message: 'Akceptowane pliki to: jpeg, jpg i png',
         })
       ),

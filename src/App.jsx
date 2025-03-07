@@ -8,7 +8,7 @@ const App = () => {
 
   return (
     <Container>
-      {userData === null ? (
+      {!userData ? (
         <ApplicationForm setUserData={setUserData} />
       ) : (
         <Modal userData={userData} />

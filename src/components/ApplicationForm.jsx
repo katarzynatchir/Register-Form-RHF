@@ -1,34 +1,34 @@
-import { useFieldArray, useForm } from 'react-hook-form';
 import { useState } from 'react';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import formSchema from '../validation/schemaValidation';
 import {
   ApplicationFormStyled,
   H1,
   H2,
-  Input,
-  InputFile,
-  Select,
-  LabelControl,
-  Checkbox,
-  Radio,
   ErrorMessage,
   FlexRow,
   FlexItem,
   Button,
-  AddButton,
-  DeleteButton,
 } from '../styles/styles';
+import {
+  technologyOptions,
+  programingLanguages,
+  years,
+} from '../data/selectOptions';
+import formSchema from '../validation/schemaValidation';
 import TextField from './TextField';
+import Select from './Select';
+import Radio from './Radio';
+import Checkbox from './Checkbox';
 
 const ApplicationForm = ({ setUserData }) => {
   const [imgPreview, setImgPreview] = useState();
+  const [isExperienced, setIsExperienced] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
     control,
   } = useForm({
     mode: 'onChange',
@@ -38,11 +38,11 @@ const ApplicationForm = ({ setUserData }) => {
       lastName: '',
       email: '',
       phone: '',
-      formOfLearnig: '',
+      formOfLearning: '',
       technology: [],
       imageCV: {},
       isExperienced: false,
-      // programingLanguages: [{ name: 'JavaScript', years: '1' }],
+      programingLanguages: [],
     },
   });
 
@@ -50,8 +50,6 @@ const ApplicationForm = ({ setUserData }) => {
     control,
     name: 'programingLanguages',
   });
-
-  const isExperienced = watch('isExperienced');
 
   const handleUploadedFile = event => {
     const file = event.target.files[0];
@@ -64,26 +62,16 @@ const ApplicationForm = ({ setUserData }) => {
     console.log(data);
   };
 
-  const onError = errors => console.log('validation errors', errors);
-
   return (
     <>
       <H1>Formularz zgłoszeniowy na kurs programowania</H1>
-      <ApplicationFormStyled onSubmit={handleSubmit(onSubmit, onError)}>
+      <ApplicationFormStyled onSubmit={handleSubmit(onSubmit)}>
         <H2>Dane osobowe</H2>
-
         <TextField
           label="Imię"
           error={errors.firstName}
           {...register('firstName')}
         />
-
-        {/* <div>
-          <Input {...register('firstName')} type="text" placeholder="Imię" />
-          {errors.firstName && (
-            <ErrorMessage>{errors.firstName.message}</ErrorMessage>
-          )}
-        </div> */}
 
         <TextField
           label="Nazwisko"
@@ -91,20 +79,7 @@ const ApplicationForm = ({ setUserData }) => {
           {...register('lastName')}
         />
 
-        {/* <div>
-          <Input {...register('lastName')} type="text" placeholder="Nazwisko" />
-          {errors.lastName && (
-            <ErrorMessage>{errors.lastName.message}</ErrorMessage>
-          )}
-        </div> */}
-
         <TextField label="Email" error={errors.email} {...register('email')} />
-
-        {/* 
-        <div>
-          <Input {...register('email')} type="text" placeholder="Email" />
-          {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
-        </div> */}
 
         <TextField
           type="number"
@@ -113,80 +88,54 @@ const ApplicationForm = ({ setUserData }) => {
           {...register('phone')}
         />
 
-        {/* <div>
-          <Input
-            {...register('phone')}
-            type="number"
-            placeholder="Numer telefonu"
-          />
-          {errors.phone && <ErrorMessage>{errors.phone.message}</ErrorMessage>}
-        </div> */}
-
         <H2>Preferencje kursu</H2>
-
         <div>
           <FlexRow>
             <p>Wybierz formę nauki: </p>
-            <LabelControl htmlFor="stationary">
-              <Radio
-                {...register('formOfLearnig')}
-                type="radio"
-                id="stationary"
-                value="Stacjonarny"
-              />
-              <span>Stacjonarna</span>
-            </LabelControl>
-            <LabelControl htmlFor="online">
-              <Radio
-                {...register('formOfLearnig')}
-                type="radio"
-                id="online"
-                value="Online"
-              />
-              <span>Online</span>
-            </LabelControl>
+
+            <Radio
+              label="Stacjonarna"
+              id="stationary"
+              {...register('formOfLearning')}
+            />
+            <Radio label="Online" id="online" {...register('formOfLearning')} />
           </FlexRow>
-          {errors.formOfLearnig && (
-            <ErrorMessage>{errors.formOfLearnig.message}</ErrorMessage>
+          {errors.formOfLearning && (
+            <ErrorMessage>{errors.formOfLearning.message}</ErrorMessage>
           )}
         </div>
 
-        <div>
-          <Select {...register('technology')} size={5} multiple="multiple">
-            <option value="React">React</option>
-            <option value="Node.js">Node.js</option>
-            <option value="HTML">HTML</option>
-            <option value="CSS">CSS</option>
-            <option value="Next.js">Next.js</option>
-          </Select>
-          {errors.technology && (
-            <ErrorMessage>{errors.technology.message}</ErrorMessage>
-          )}
-        </div>
+        <Select
+          {...register('technology')}
+          size={5}
+          multiple
+          options={technologyOptions}
+          error={errors.technology}
+        />
 
-        <div>
-          <H2>Dodaj swoje CV</H2>
-          <InputFile
-            {...register('imageCV')}
-            type="file"
-            onChange={handleUploadedFile}
-          />
-          {errors.imageCV && (
-            <ErrorMessage>{errors.imageCV.message}</ErrorMessage>
-          )}
-        </div>
+        <H2>Dodaj swoje CV</H2>
+        <TextField
+          type="file"
+          error={errors.imageCV}
+          className="fileInput"
+          {...register('imageCV', {
+            onChange: event => handleUploadedFile(event),
+          })}
+        />
 
         <H2>Doświadczenie w programowaniu</H2>
-        <div>
-          <LabelControl>
-            <Checkbox type="checkbox" {...register('isExperienced')} />
-            <span>Czy masz doświadczenie w programowaniu?</span>
-          </LabelControl>
-        </div>
+        <Checkbox
+          label="Czy masz doświadczenie w programowaniu?"
+          {...register('isExperienced', {
+            onChange: () => setIsExperienced(prev => !prev),
+          })}
+        />
+
         {isExperienced && (
           <>
             <div>
-              <AddButton
+              <Button
+                className="btn-add"
                 type="button"
                 onClick={() => {
                   append({
@@ -196,7 +145,7 @@ const ApplicationForm = ({ setUserData }) => {
                 }}
               >
                 Dodaj doświadczenie
-              </AddButton>
+              </Button>
               {errors.programingLanguages && (
                 <ErrorMessage>
                   {errors.programingLanguages.message}
@@ -210,36 +159,30 @@ const ApplicationForm = ({ setUserData }) => {
                     {...register(`programingLanguages.${index}.name`, {
                       shouldUnregister: true,
                     })}
-                  >
-                    <option value="JavaScript">JavaScript</option>
-                    <option value="Python">Python</option>
-                    <option value="C++">C++</option>
-                    <option value="Inne">Inne</option>
-                  </Select>
+                    options={programingLanguages}
+                  />
                 </FlexItem>
                 <FlexItem>
                   <Select
                     {...register(`programingLanguages.${index}.years`, {
                       shouldUnregister: true,
                     })}
-                  >
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                  </Select>
+                    options={years}
+                  />
                 </FlexItem>
                 <FlexItem>
-                  <DeleteButton type="button" onClick={index => remove(index)}>
+                  <Button
+                    className="btn-delete"
+                    type="button"
+                    onClick={() => remove(index)}
+                  >
                     Usuń
-                  </DeleteButton>
+                  </Button>
                 </FlexItem>
               </FlexRow>
             ))}
           </>
         )}
-        {/* <pre>{JSON.stringify(watch(), null, 2)}</pre> */}
         <Button type="submit">Wyślij zgłoszenie</Button>
       </ApplicationFormStyled>
     </>
