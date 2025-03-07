@@ -37,7 +37,7 @@ const formSchema = z
     phone: z.string().regex(phoneValidation, {
       message: 'Numer telefonu musi składać się z 9 cyfr',
     }),
-    formOfLearnig: z.enum(['stationary', 'online'], {
+    formOfLearnig: z.enum(['Stacjonarny', 'Online'], {
       message: 'Należy wybrać preferowaną formę nauki',
     }),
     technology: z
